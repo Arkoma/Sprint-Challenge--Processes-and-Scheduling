@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 #define PROMPT "lambda-shell$ "
 
@@ -108,9 +109,18 @@ int main(void)
 						fprintf(stderr, "fork failed\n");
 						exit(1);
 					} else if (child == 0) { 
+						if (strcmp(args[0], "cd") ==0) {
+							int cd = chdir(args[1]);
+							if (cd < 0) {
+								perror("chdir");
+							} 
+							chdir(args[1]);
+							continue;
+						}
 						execvp(strdup(args[0]), args);
+						
 					} else {
-						int wc = waitpid(child, NULL, 0);
+						waitpid(child, NULL, 0);
 					}
 					continue;
 				} 
