@@ -101,8 +101,19 @@ int main(void)
         #endif
         
         /* Add your code for implementing the shell's logic here */
-        
-    }
 
-    return 0;
+        if (args_count > 0) {
+					int child = fork();
+					if (child < 0) {
+						fprintf(stderr, "fork failed\n");
+						exit(1);
+					} else if (child == 0) { 
+						execvp(strdup(args[0]), args);
+					} else {
+						int wc = waitpid(child, NULL, 0);
+					}
+					continue;
+				} 
+	return 0;
+	}
 }
